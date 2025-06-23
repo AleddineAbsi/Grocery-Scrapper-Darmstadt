@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -56,13 +57,23 @@ public class Main {
                 lastHeight = newHeight;
                 result = (Number) js.executeScript("return window.scrollY;");
                 newHeight = result.longValue();
-                System.out.println(lastHeight + "   " + newHeight);
             }
 
 
             // Collecting of Data
-            List<WebElement> produktElements = driver.findElements(By.cssSelector("li.tile-list__item"));
+            List<WebElement> produktElements = driver.findElements(By.cssSelector("li.tile-list__item, div.l-container"));
             for (WebElement el : produktElements) {
+                ///date
+                try{
+                    String date = el.findElements(By.cssSelector("div.category-bar__badge.badge.t-bg--white.t-color--grey-midnight")).getLast().getText();
+                    System.out.println("Date : " + date);
+                }
+                catch(java.util.NoSuchElementException e){
+
+                }
+
+
+                ///Products
                 try {
                     String nom = el.findElement(By.cssSelector("h3.h4.offer-tile__headline")).getText();
                     String prix = el.findElement(By.cssSelector("div.ellipsis.bubble__price")).getText();
