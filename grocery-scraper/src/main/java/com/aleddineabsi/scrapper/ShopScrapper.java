@@ -20,20 +20,30 @@ import java.util.Locale;
  * @version  1.0
  */
 public class ShopScrapper {
-    void scrap(){
+    void scrap(
+            int scrollDelayTime,
+            String browserRoot,
+            String websiteUrl,
+            String productClass,
+            String productNameClass,
+            String productPriceClass,
+            String productDiscountPriceClass,
+            String boxClass,
+            String dateClass,
+            String categoryClass){
 
-        String browserRoot ="C:\\Users\\Aleddine\\Desktop\\chrome-win\\chrome.exe";
-        String websiteUrl ="https://www.penny.de/angebote/15A-05";
-        String productClass ="";
-        String productNameClass ="";
-        String productPriceClass ="";
-        String productDiscountPriceClass ="";
+         browserRoot ="C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe";
+         websiteUrl ="https://www.penny.de/angebote/15A-05";
+         productClass ="div.l-container";
+         productNameClass ="h3.h4.offer-tile__headline";
+         productPriceClass ="div.ellipsis.bubble__price";
+         productDiscountPriceClass ="span.bubble__price.ellipsis";
 
-        String boxClass="";
-        String dateClass ="";
-        String categoryClass ="";
+         boxClass="li.tile-list__item";
+         dateClass ="div.category-bar__badge.badge.t-bg--white.t-color--grey-midnight";
+         categoryClass ="h2.category-bar__hdln.t-color--white.h5";
 
-        int scrollDelayTime = 250;
+         scrollDelayTime = 250;
 
         //for testing purpose
         boolean runHeadless = false;
@@ -63,7 +73,7 @@ public class ShopScrapper {
 
             // Wait till the Website shows up
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.ellipsis.bubble__price")));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(productPriceClass)));
 
 
             JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -85,12 +95,12 @@ public class ShopScrapper {
 
 
             // Collecting of Data
-            List<WebElement> produktElements = driver.findElements(By.cssSelector("li.tile-list__item, div.l-container"));
+            List<WebElement> produktElements = driver.findElements(By.cssSelector(boxClass +", " + productClass));
             for (WebElement el : produktElements) {
                 ///date
                 try{
-                    String date = el.findElements(By.cssSelector("div.category-bar__badge.badge.t-bg--white.t-color--grey-midnight")).getLast().getText();
-                    String category = el.findElement(By.cssSelector("h2.category-bar__hdln.t-color--white.h5")).getText();
+                    String date = el.findElements(By.cssSelector(dateClass)).getLast().getText();
+                    String category = el.findElement(By.cssSelector(categoryClass)).getText();
                     System.out.println("----------------");
                     System.out.println("Category :"+ category+ "/Date : " + date);
                 }
@@ -98,12 +108,13 @@ public class ShopScrapper {
                 }
                 ///Products
                 try {
-                    String nom = el.findElement(By.cssSelector("h3.h4.offer-tile__headline")).getText();
-                    String price = el.findElement(By.cssSelector("div.ellipsis.bubble__price")).getText();
+                    String nom = el.findElement(By.cssSelector(productNameClass)).getAttribute("innerText");
+                    String price = el.findElement(By.cssSelector(productPriceClass)).getText();
+
 
                     //special by Penny for the app price
                     try{
-                        String price2 = el.findElement(By.cssSelector("span.bubble__price.ellipsis")).getText();
+                        String price2 = el.findElement(By.cssSelector(productDiscountPriceClass)).getText();
                         System.out.println(nom + " : " + price2 + " : " + price);
                     }
                     catch (NoSuchElementException e){
