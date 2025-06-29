@@ -1,0 +1,79 @@
+package com.aleddineabsi.scrapper;
+import java.sql.*;
+
+/**
+ * Test class for managing the SQLite Database
+ */
+public class DatabaseManager {
+    static final String DB_URL = "jdbc:sqlite:data/groceriesDatabase.db";
+
+    public void manage(){
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
+            if (conn != null) {
+                System.out.println("Found the Database File");
+
+                // Read data
+                if (!hasData(conn)) {
+                    System.out.println("empty Table");
+                }
+
+                // Insert Product
+                insertProduct(conn, "Lait entier", "Aldi", 0.89);
+                listProducts(conn);
+
+                // Delete Product
+                //deleteProductByName(conn, "Lait entier");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error" + e.getMessage());
+        }
+    }
+
+    static boolean hasData(Connection conn) throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM products";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            int count = rs.getInt("total");
+            return count > 0;
+        }
+    }
+
+    static void insertProduct(Connection conn, String name, String store, double price) throws SQLException {
+        String sql = "INSERT INTO products(name, store, price, updated_at) VALUES (?, ?, ?, datetime('now'))";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, store);
+            pstmt.setDouble(3, price);
+            pstmt.executeUpdate();
+            System.out.println("inserted");
+        }
+    }
+
+    static void listProducts(Connection conn) throws SQLException {
+        String sql = "SELECT * FROM products";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            System.out.println("List of Product :");
+            while (rs.next()) {
+                System.out.printf("- %d | %s | %.2f€ | %s | %s\n",
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        rs.getString("store"),
+                        rs.getString("updated_at"));
+            }
+        }
+    }
+
+    static void deleteProductByName(Connection conn, String name) throws SQLException {
+        String sql = "DELETE FROM products WHERE name = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            int rows = pstmt.executeUpdate();
+            System.out.println("Deleted Product: " + rows + " levels");
+        }
+    }
+
+}

@@ -15,6 +15,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.16.1")
     implementation("org.seleniumhq.selenium:selenium-java:4.21.0")
     implementation("io.github.bonigarcia:webdrivermanager:5.7.0")
+    implementation("org.xerial:sqlite-jdbc:3.45.1.0")
 }
 
 tasks.test {
