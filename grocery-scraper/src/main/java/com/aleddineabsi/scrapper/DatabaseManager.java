@@ -7,7 +7,7 @@ import java.sql.*;
 public class DatabaseManager {
     static final String DB_URL = "jdbc:sqlite:data/groceriesDatabase.db";
 
-    public void manage(){
+    public static void manage(){
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             if (conn != null) {
                 System.out.println("Found the Database File");
@@ -23,6 +23,7 @@ public class DatabaseManager {
 
                 // Delete Product
                 //deleteProductByName(conn, "Lait entier");
+
             }
 
         } catch (SQLException e) {
@@ -73,6 +74,20 @@ public class DatabaseManager {
             pstmt.setString(1, name);
             int rows = pstmt.executeUpdate();
             System.out.println("Deleted Product: " + rows + " levels");
+        }
+    }
+
+    public static void resetProductsTable(Connection conn) {
+        try (Statement stmt = conn.createStatement()) {
+            // Supprimer toutes les lignes
+            stmt.executeUpdate("DELETE FROM products");
+
+            // Réinitialiser l'autoincrement de l'id
+            stmt.executeUpdate("DELETE FROM sqlite_sequence WHERE name='products'");
+
+            System.out.println("Database emptied and id resetted");
+        } catch (SQLException e) {
+            System.out.println("Error during deletion of Database" + e.getMessage());
         }
     }
 

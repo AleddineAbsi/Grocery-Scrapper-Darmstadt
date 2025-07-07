@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
@@ -17,8 +19,9 @@ import java.util.Locale;
  * Slower runtime for complete results.
  *
  * @author Aleddine
- * @version  1.0
+ * @version  2.0
  */
+
 public class ShopScrapper {
     void scrap(
             int scrollDelayTime,
@@ -45,38 +48,47 @@ public class ShopScrapper {
 
          scrollDelayTime = 250;
 
-        //for testing purpose
-        boolean runHeadless = false;
+        // load Chromium
+        WebDriver driver = setupDriver(false,browserRoot);
+        fillDriver(driver,websiteUrl,scrollDelayTime);
+        fillDataBase(driver,boxClass,dateClass,productClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass);
+        driver.close();
+    }
 
-
-        // driver Setup
+    /**
+     * Setup the Dreiver with given Parameter
+     *
+     * @param runHeadless enable/disable headless for testing
+     * @param browserRoot root of the Browser app
+     */
+    private WebDriver setupDriver(boolean runHeadless,String browserRoot){
         WebDriverManager.chromedriver().setup();
-
-        // Chromium config
         ChromeOptions options = new ChromeOptions();
-
         if(runHeadless) {
             options.addArguments("--headless=new");
             options.addArguments("--disable-gpu");
             options.addArguments("--window-size=1920,1080");
         }
-
-        // root chromium
         options.setBinary(browserRoot);
+        return new ChromeDriver(options);
+    }
 
-        // load Chromium
-        WebDriver driver = new ChromeDriver(options);
-
-        try {
+    /**
+     * Scrolls website long and slowly enough to load all html data and store it inside
+     * the driverToFill WebDriver
+     *
+     * @param driverToFill WebDriver to fill
+     * @param websiteUrl Url from the Website to extract data from
+     * @param scrollDelayTime Scroll delay till the element appears in the screen
+     */
+    private void fillDriver(WebDriver driverToFill,String websiteUrl,int scrollDelayTime){
+        try{
             // Load Website
-            driver.get(websiteUrl);
+            driverToFill.get(websiteUrl);
 
             // Wait till the Website shows up
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(productPriceClass)));
-
-
-            JavascriptExecutor js = (JavascriptExecutor) driver;
+            WebDriverWait wait = new WebDriverWait(driverToFill, Duration.ofSeconds(30));
+            JavascriptExecutor js = (JavascriptExecutor) driverToFill;
 
             //y position in the page
             Number result = (Number) js.executeScript("return window.scrollY;");
@@ -91,46 +103,72 @@ public class ShopScrapper {
                 result = (Number) js.executeScript("return window.scrollY;");
                 newHeight = result.longValue();
             }
-
-
-
-            // Collecting of Data
-            List<WebElement> produktElements = driver.findElements(By.cssSelector(boxClass +", " + productClass));
-            for (WebElement el : produktElements) {
-                ///date
-                try{
-                    String date = el.findElements(By.cssSelector(dateClass)).getLast().getText();
-                    String category = el.findElement(By.cssSelector(categoryClass)).getText();
-                    System.out.println("----------------");
-                    System.out.println("Category :"+ category+ "/Date : " + date);
-                }
-                catch(java.util.NoSuchElementException e){
-                }
-                ///Products
-                try {
-                    String nom = el.findElement(By.cssSelector(productNameClass)).getAttribute("innerText");
-                    String price = el.findElement(By.cssSelector(productPriceClass)).getText();
-
-
-                    //special by Penny for the app price
-                    try{
-                        String price2 = el.findElement(By.cssSelector(productDiscountPriceClass)).getText();
-                        System.out.println(nom + " : " + price2 + " : " + price);
-                    }
-                    catch (NoSuchElementException e){
-                        System.out.println(nom + " : " + price);
-                    }
-                }
-                //special by Penny some prices are images
-                catch(NoSuchElementException e){
-                    continue;
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            //close navigator
-            driver.quit();
+        }
+    }
+
+    /**
+     * extract infromation from the HTML Tags and save them together in a database
+     *
+     * @param driver Webdriver that contains the Websites information
+     * @param boxClass,dateClass,ProductClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass
+     * the String HTML Tag name of each element searched
+     */
+    private void fillDataBase(
+            WebDriver driver,
+            String boxClass,
+            String dateClass,
+            String productClass,
+            String productNameClass,
+            String categoryClass,
+            String productPriceClass,
+            String productDiscountPriceClass){
+        String date = "null";
+        String category ="null";
+        String name = "null";
+        double price =  0;
+        String price2 = "null";
+
+        List<WebElement> produktElements = driver.findElements(By.cssSelector(boxClass +", " + productClass));
+        for (WebElement el : produktElements) {
+            ///date
+            try {
+                date = el.findElements(By.cssSelector(dateClass)).getLast().getText();
+                category = el.findElement(By.cssSelector(categoryClass)).getText();
+                System.out.println("----------------");
+                System.out.println("Category :" + category + "/Date : " + date);
+            } catch (java.util.NoSuchElementException e) {
+            }
+            ///Products
+            try {
+                name = el.findElement(By.cssSelector(productNameClass)).getAttribute("innerText");
+                //remove euro sign
+                String wholePrice = el.findElement(By.cssSelector(productPriceClass)).getText();
+                try {
+                    price = Double.parseDouble(wholePrice.substring(0, wholePrice.length() - 1));
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+
+                //special by Penny for the app price
+                try {
+                    price2 = el.findElement(By.cssSelector(productDiscountPriceClass)).getText();
+                    System.out.println(name + " : " + price2 + " : " + price);
+                } catch (NoSuchElementException e) {
+                    System.out.println(name + " : " + price);
+                }
+            }
+            //special by Penny some prices are images
+            catch (NoSuchElementException e) {
+                continue;
+            }
+            try {
+                DatabaseManager.insertProduct(DriverManager.getConnection("jdbc:sqlite:data/groceriesDatabase.db"), name, "Penny", price);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

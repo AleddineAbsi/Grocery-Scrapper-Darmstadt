@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.DriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Main {
         ShopScrapper myScrapper = new ShopScrapper();
 
         /// Scrap Penny
-        /*myScrapper.scrap(
+        myScrapper.scrap(
                 250,
                 "C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe",
                 "https://www.penny.de/angebote/15A-05",
@@ -32,10 +33,11 @@ public class Main {
                 "div.category-bar__badge.badge.t-bg--white.t-color--grey-midnight",
                 "h2.category-bar__hdln.t-color--white.h5"
                 );
-         */
 
-        DatabaseManager myManager = new DatabaseManager();
-        myManager.manage();
+        DatabaseManager.manage();
+
+        //DatabaseManager myManager = new DatabaseManager();
+        //myManager.manage();
 
 
     }
