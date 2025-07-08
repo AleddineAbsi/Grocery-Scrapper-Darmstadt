@@ -25,7 +25,7 @@ import java.util.Locale;
 
 public class ShopScrapper {
     /**
-     * Setup the Dreiver with given Parameter
+     * Set up the Driver with given Parameter
      *
      * @param browserRoot root of the Browser app
      */

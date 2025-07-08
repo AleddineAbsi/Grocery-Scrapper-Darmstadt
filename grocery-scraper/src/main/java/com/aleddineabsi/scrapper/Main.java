@@ -18,7 +18,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hellääüo world!");
+        System.out.println("Hellääo world!");
         ShopScrapper myScrapper = new ShopScrapper();
 
         DatabaseManager.manage();

@@ -17,7 +17,7 @@ public class DatabaseManager {
                     System.out.println("empty Table");
                 }
 
-                // Insert Product
+                //Insert Product
                 //insertProduct(conn, "Lait entier", "Aldi", 0.89);
                 //listProducts(conn);
 
