@@ -20,38 +20,33 @@ import java.util.Locale;
  *
  * @author Aleddine
  * @version  2.0
+ *
  */
 
 public class ShopScrapper {
+    /**
+     * Setup the Dreiver with given Parameter
+     *
+     * @param browserRoot root of the Browser app
+     */
     void scrap(
-            int scrollDelayTime,
+            String storeName,
             String browserRoot,
             String websiteUrl,
             String productClass,
             String productNameClass,
             String productPriceClass,
             String productDiscountPriceClass,
-            String boxClass,
             String dateClass,
-            String categoryClass){
+            String categoryClass,
+            int scrollDelayTime
+    ){
 
-         browserRoot ="C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe";
-         websiteUrl ="https://www.penny.de/angebote/15A-05";
-         productClass ="div.l-container";
-         productNameClass ="h3.h4.offer-tile__headline";
-         productPriceClass ="div.ellipsis.bubble__price";
-         productDiscountPriceClass ="span.bubble__price.ellipsis";
-
-         boxClass="li.tile-list__item";
-         dateClass ="div.category-bar__badge.badge.t-bg--white.t-color--grey-midnight";
-         categoryClass ="h2.category-bar__hdln.t-color--white.h5";
-
-         scrollDelayTime = 250;
 
         // load Chromium
         WebDriver driver = setupDriver(false,browserRoot);
         fillDriver(driver,websiteUrl,scrollDelayTime);
-        fillDataBase(driver,boxClass,dateClass,productClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass);
+        fillDataBase(driver,dateClass,productClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass,storeName);
         driver.close();
     }
 
@@ -112,25 +107,25 @@ public class ShopScrapper {
      * extract infromation from the HTML Tags and save them together in a database
      *
      * @param driver Webdriver that contains the Websites information
-     * @param boxClass,dateClass,ProductClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass
+     * @param dateClass,ProductClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass
      * the String HTML Tag name of each element searched
      */
     private void fillDataBase(
             WebDriver driver,
-            String boxClass,
             String dateClass,
             String productClass,
             String productNameClass,
             String categoryClass,
             String productPriceClass,
-            String productDiscountPriceClass){
+            String productDiscountPriceClass,
+            String storeName){
         String date = "null";
         String category ="null";
         String name = "null";
         double price =  0;
         String price2 = "null";
 
-        List<WebElement> produktElements = driver.findElements(By.cssSelector(boxClass +", " + productClass));
+        List<WebElement> produktElements = driver.findElements(By.cssSelector(productClass));
         for (WebElement el : produktElements) {
             ///date
             try {
@@ -144,9 +139,14 @@ public class ShopScrapper {
             try {
                 name = el.findElement(By.cssSelector(productNameClass)).getAttribute("innerText");
                 //remove euro sign
-                String wholePrice = el.findElement(By.cssSelector(productPriceClass)).getText();
+                String wholePrice = el.findElement(By.cssSelector(productPriceClass)).getAttribute("innerText");
+                System.out.println(wholePrice);
+                wholePrice = wholePrice.replace(",",".");
+                wholePrice = wholePrice.replaceAll("[ €]", "");
                 try {
-                    price = Double.parseDouble(wholePrice.substring(0, wholePrice.length() - 1));
+                    if(!wholePrice.isEmpty()) {
+                        price = Double.parseDouble(wholePrice);
+                    }
                 } catch (NumberFormatException e) {
                     continue;
                 }
@@ -165,7 +165,7 @@ public class ShopScrapper {
                 continue;
             }
             try {
-                DatabaseManager.insertProduct(DriverManager.getConnection("jdbc:sqlite:data/groceriesDatabase.db"), name, "Penny", price);
+                DatabaseManager.insertProduct(DriverManager.getConnection("jdbc:sqlite:data/groceriesDatabase.db"), name,storeName , price);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

@@ -18,9 +18,10 @@ public class DatabaseManager {
                 }
 
                 // Insert Product
-                insertProduct(conn, "Lait entier", "Aldi", 0.89);
-                listProducts(conn);
+                //insertProduct(conn, "Lait entier", "Aldi", 0.89);
+                //listProducts(conn);
 
+                resetProductsTable(conn);
                 // Delete Product
                 //deleteProductByName(conn, "Lait entier");
 
@@ -47,7 +48,6 @@ public class DatabaseManager {
             pstmt.setString(2, store);
             pstmt.setDouble(3, price);
             pstmt.executeUpdate();
-            System.out.println("inserted");
         }
     }
 
