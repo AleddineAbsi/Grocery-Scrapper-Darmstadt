@@ -33,7 +33,7 @@ public class ShopScrapper {
             String storeName,
             String browserRoot,
             String websiteUrl,
-            String productClass,
+            String informationsClasses,
             String productNameClass,
             String productPriceClass,
             String productDiscountPriceClass,
@@ -46,7 +46,7 @@ public class ShopScrapper {
         // load Chromium
         WebDriver driver = setupDriver(false,browserRoot);
         fillDriver(driver,websiteUrl,scrollDelayTime);
-        fillDataBase(driver,dateClass,productClass,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass,storeName);
+        fillDataBase(driver,dateClass,informationsClasses,productNameClass,categoryClass,productPriceClass,productDiscountPriceClass,storeName);
         driver.close();
     }
 
@@ -118,58 +118,62 @@ public class ShopScrapper {
             String categoryClass,
             String productPriceClass,
             String productDiscountPriceClass,
-            String storeName){
+            String storeName) {
         String date = "null";
-        String category ="null";
+        String category = "null";
         String name = "null";
-        double price =  0;
+        double price = 0;
         String price2 = "null";
+        String localCategory = "no Category";
 
         List<WebElement> produktElements = driver.findElements(By.cssSelector(productClass));
         for (WebElement el : produktElements) {
             ///date
             try {
                 date = el.findElements(By.cssSelector(dateClass)).getLast().getText();
-                category = el.findElement(By.cssSelector(categoryClass)).getText();
+            } catch (java.util.NoSuchElementException e) {}
+
+            ///Category
+            try {
+                category = el.findElement(By.cssSelector(categoryClass)).getAttribute("innerText");
+                localCategory = category;
                 System.out.println("----------------");
                 System.out.println("Category :" + category + "/Date : " + date);
-            } catch (java.util.NoSuchElementException e) {
-            }
-            ///Products
+            } catch (NoSuchElementException e) {}
+
+            ///Name
             try {
                 name = el.findElement(By.cssSelector(productNameClass)).getAttribute("innerText");
-                //remove euro sign
+            } catch (NoSuchElementException e) {}
+
+            /// Price
+            try {
                 String wholePrice = el.findElement(By.cssSelector(productPriceClass)).getAttribute("innerText");
-                System.out.println(wholePrice);
-                wholePrice = wholePrice.replace(",",".");
-                wholePrice = wholePrice.replaceAll("[ €]", "");
+                //fix Format before converting
+                wholePrice = wholePrice.replace(",", ".");
+                wholePrice = wholePrice.replaceAll("[* €]", "");
                 try {
-                    if(!wholePrice.isEmpty()) {
+                    if (!wholePrice.isEmpty()) {
                         price = Double.parseDouble(wholePrice);
                     }
                 } catch (NumberFormatException e) {
                     continue;
                 }
+            } catch (NoSuchElementException e) {}
 
-
-                //special by Penny for the app price
-                try {
-                    price2 = el.findElement(By.cssSelector(productDiscountPriceClass)).getText();
-                    System.out.println(name + " : " + price2 + " : " + price);
-                } catch (NoSuchElementException e) {
-                    System.out.println(name + " : " + price);
-                }
-            }
-            //special by Penny some prices are images
-            catch (NoSuchElementException e) {
-                continue;
+            //special by Penny for the app price
+            try {
+                price2 = el.findElement(By.cssSelector(productDiscountPriceClass)).getText();
+                System.out.println(name + " : " + price2 + " : " + price + " : " + localCategory);
+            } catch (NoSuchElementException e) {
+                System.out.println(name + " : " + price + " : " + localCategory);
             }
             try {
-                DatabaseManager.insertProduct(DriverManager.getConnection("jdbc:sqlite:data/groceriesDatabase.db"), name,storeName , price);
+                if(name != "null")
+                    DatabaseManager.insertProduct(DriverManager.getConnection("jdbc:sqlite:data/groceriesDatabase.db"), name, storeName,localCategory, price);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
 }

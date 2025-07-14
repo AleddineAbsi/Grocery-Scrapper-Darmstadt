@@ -41,12 +41,13 @@ public class DatabaseManager {
         }
     }
 
-    static void insertProduct(Connection conn, String name, String store, double price) throws SQLException {
-        String sql = "INSERT INTO products(name, store, price, updated_at) VALUES (?, ?, ?, datetime('now'))";
+    static void insertProduct(Connection conn, String name, String store, String category,double price) throws SQLException {
+        String sql = "INSERT INTO products(name, store, price, category,updated_at) VALUES (?, ?, ?, ?,datetime('now'))";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, name);
             pstmt.setString(2, store);
             pstmt.setDouble(3, price);
+            pstmt.setString(4, category);
             pstmt.executeUpdate();
         }
     }
