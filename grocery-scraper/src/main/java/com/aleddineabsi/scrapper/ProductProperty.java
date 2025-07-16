@@ -7,4 +7,5 @@ public enum ProductProperty {
     DATE,
     PRICE,
     STORE
+
 }
