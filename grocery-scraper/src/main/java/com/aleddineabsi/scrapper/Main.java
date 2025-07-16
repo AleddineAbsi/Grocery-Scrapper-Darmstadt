@@ -10,8 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import javax.xml.crypto.Data;
 import java.sql.DriverManager;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 
@@ -19,10 +18,12 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hellääo world!");
+
+        /*
         ShopScrapper myScrapper = new ShopScrapper();
+        String browserRoot = "C:\\Users\\laledd\\Desktop\\Chromium\\chrome.exe";
 
         DatabaseManager.manage();
-        /// Scrap Penny
 
 
 
@@ -32,7 +33,7 @@ public class Main {
             System.out.println("starterd first thread");
             myScrapper.scrap(
                     "Penny",
-                    "C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe",
+                    browserRoot,
                     "https://www.penny.de/angebote/15A-05",
                     "article.offer-tile, article.offer-tile.offer-tile--highlight, div.category-bar__texts",
                     "h3.h4.offer-tile__headline, h4.offer-tile__headline",
@@ -49,7 +50,7 @@ public class Main {
             myScrapper.scrap
                     (
                             "Rewe",
-                            "C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe",
+                            browserRoot,
                             "https://www.rewe.de/angebote/darmstadt/240070/rewe-markt-heinrichstr-52/?icid=marktseiten_rewe-de%3Amarktseite-240070_int_angebote_rewe-de%3Aangebote_nn_nn_nn_nn",
                             "div.sos-offer, div.sos-category__content-title",
                             "a.cor-offer-information__title-link",
@@ -64,7 +65,7 @@ public class Main {
         Thread t3 = new Thread  (() ->{
             System.out.println("starterd third thread");
             myScrapper.scrap("Edeka",
-                    "C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe",
+                    browserRoot,
                     "https://www.edeka.de/eh/s%C3%BCdwest/e-center-patschull-eschollbr%C3%BCcker-stra%C3%9Fe-44/angebote.jsp",
                     "div.css-1uiiw0z, div.css-4z4xul",
                     "span.css-i72elb",
@@ -80,9 +81,6 @@ public class Main {
         t2.start();
         t3.start();
 
-
-
-
+        */
     }
-
 }

@@ -1,11 +1,14 @@
 package com.aleddineabsi.scrapper;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test class for managing the SQLite Database
  */
 public class DatabaseManager {
     static final String DB_URL = "jdbc:sqlite:data/groceriesDatabase.db";
+
 
     public static void manage(){
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
@@ -51,7 +54,9 @@ public class DatabaseManager {
             pstmt.executeUpdate();
         }
     }
-
+    /**
+     * for testing purposes
+     */
     static void listProducts(Connection conn) throws SQLException {
         String sql = "SELECT * FROM products";
         try (Statement stmt = conn.createStatement();
@@ -66,6 +71,31 @@ public class DatabaseManager {
                         rs.getString("store"),
                         rs.getString("updated_at"));
             }
+        }
+    }
+
+
+    /**
+     * extract Data from the SQLite data base and parse it in a List<Product> element
+     */
+    static List<Product> getProductListing(Connection conn) throws SQLException {
+        List<Product> productListing = new ArrayList<>();
+        String sql = "SELECT * FROM products";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Product localProduct = new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        0,
+                        rs.getString("store"),
+                        rs.getString("updated_at"),
+                        rs.getString("store")
+                        );
+                productListing.add(localProduct);
+            }
+            return productListing;
         }
     }
 
