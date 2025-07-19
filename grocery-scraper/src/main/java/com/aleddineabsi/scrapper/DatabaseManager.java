@@ -1,4 +1,7 @@
 package com.aleddineabsi.scrapper;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +122,21 @@ public class DatabaseManager {
             System.out.println("Database emptied and id resetted");
         } catch (SQLException e) {
             System.out.println("Error during deletion of Database" + e.getMessage());
+        }
+    }
+
+
+    //Python section +
+
+    public static void exporterProduitsCSV(List<Product> produits, String cheminFichier) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new File(cheminFichier))) {
+            writer.println("id;name;price;price2;category;date;store");
+
+            for (Product p : produits) {
+                writer.printf("%d;%s;%.2f;%.2f;%s;%s;%s\n",
+                        p.getId(), p.getName(), p.getPrice(), p.getPrice2(),
+                        p.getCategory(), p.getDate(), p.getStore());
+            }
         }
     }
 

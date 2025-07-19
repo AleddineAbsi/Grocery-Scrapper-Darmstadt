@@ -1,19 +1,8 @@
 package com.aleddineabsi.scrapper;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.xml.crypto.Data;
-import java.sql.DriverManager;
-import java.time.Duration;
-
-
-
-
+import java.io.IOException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -82,5 +71,20 @@ public class Main {
         t3.start();
 
         */
+
+        ProductData myData = new ProductData();
+        myData.updateProductListing();
+        myData.supressDoubles();
+        List<Product> myProduct = myData.getProductListing();
+        for(Product p : myProduct){
+            System.out.println(p.getName() + " " + p.getPrice());
+        }
+
+        try {
+            DatabaseManager.exporterProduitsCSV(myProduct, "data/produits.csv");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
