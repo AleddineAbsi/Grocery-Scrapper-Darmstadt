@@ -1,4 +1,6 @@
-package com.aleddineabsi.scrapper;
+package com.aleddineabsi.scrapper.logic;
+import com.aleddineabsi.scrapper.model.Product;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,7 +12,7 @@ import java.util.List;
  * Test class for managing the SQLite Database
  */
 public class DatabaseManager {
-    static final String DB_URL = "jdbc:sqlite:data/groceriesDatabase.db";
+    public static final String DB_URL = "jdbc:sqlite:C:\\Users\\aledd\\IdeaProjects\\Grocery-Scrapper-Darmstadt\\data\\groceriesDatabase.db";
 
 
     public static void manage(){
@@ -81,7 +83,7 @@ public class DatabaseManager {
     /**
      * extract Data from the SQLite data base and parse it in a List<Product> element
      */
-    static List<Product> getProductListing(Connection conn) throws SQLException {
+    public static List<Product> getProductListing(Connection conn) throws SQLException {
         List<Product> productListing = new ArrayList<>();
         String sql = "SELECT * FROM products";
         try (Statement stmt = conn.createStatement();

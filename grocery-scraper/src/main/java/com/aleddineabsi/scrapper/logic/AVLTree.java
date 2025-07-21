@@ -1,117 +1,113 @@
-package com.aleddineabsi.scrapper;
+package com.aleddineabsi.scrapper.logic;
+
+import com.aleddineabsi.scrapper.model.AVLNode;
+import com.aleddineabsi.scrapper.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// AVL Node Class
-public class AVLNode {
-    //we use the price as a key
-    double key;
-    List<Product> produits = new ArrayList<>();
-    int height;
-    AVLNode left, right;
-
-    //constructor
-    public AVLNode(Product p) {
-        this.key = p.getPrice();
-        this.produits.add(p);
-        this.height = 1;
-    }
-}
-
 // AVL Tree class
-class AVLTree {
+public class AVLTree {
     private AVLNode root;
 
-    //when Tree empty
     public void insert(Product p) {
         root = insert(root, p);
     }
 
-    //when tree already filled -> inser and balance+
     private AVLNode insert(AVLNode node, Product p) {
         if (node == null) return new AVLNode(p);
-        if (p.getPrice() < node.key) {
+
+        if (p.getPrice() < node.getKey()) {
             System.out.println("left");
-            node.left = insert(node.left, p);
-        }
-        else if (p.getPrice() > node.key) {
+            node.setLeft(insert(node.getLeft(), p));
+        } else if (p.getPrice() > node.getKey()) {
             System.out.println("right");
-            node.right = insert(node.right, p);
+            node.setRight(insert(node.getRight(), p));
+        } else {
+            node.getProducts().add(p);
         }
-        else {
-            node.produits.add(p);
-        }
+
         updateHeight(node);
         return balance(node);
     }
 
     private void updateHeight(AVLNode node) {
-        node.height = 1 + Math.max(height(node.left), height(node.right));
+        node.setHeight(1 + Math.max(height(node.getLeft()), height(node.getRight())));
     }
 
     private int height(AVLNode node) {
-        return node == null ? 0 : node.height;
+        return node == null ? 0 : node.getHeight();
     }
 
     private int getBalance(AVLNode node) {
-        return node == null ? 0 : height(node.left) - height(node.right);
+        return node == null ? 0 : height(node.getLeft()) - height(node.getRight());
     }
 
-
-    //balance the tree after insertion
     private AVLNode balance(AVLNode node) {
         int balance = getBalance(node);
+
         if (balance > 1) {
-            if (getBalance(node.left) < 0)
-                node.left = rotateLeft(node.left);
+            if (getBalance(node.getLeft()) < 0) {
+                node.setLeft(rotateLeft(node.getLeft()));
+            }
             return rotateRight(node);
         }
+
         if (balance < -1) {
-            if (getBalance(node.right) > 0)
-                node.right = rotateRight(node.right);
+            if (getBalance(node.getRight()) > 0) {
+                node.setRight(rotateRight(node.getRight()));
+            }
             return rotateLeft(node);
         }
+
         System.out.println("balanced");
         return node;
     }
 
     private AVLNode rotateRight(AVLNode y) {
-        AVLNode x = y.left;
-        AVLNode T2 = x.right;
-        x.right = y;
-        y.left = T2;
+        AVLNode x = y.getLeft();
+        AVLNode T2 = x.getRight();
+
+        x.setRight(y);
+        y.setLeft(T2);
+
         System.out.println("updating y height");
         updateHeight(y);
         System.out.println("updating x height");
         updateHeight(x);
+
         return x;
     }
 
     private AVLNode rotateLeft(AVLNode x) {
-        AVLNode y = x.right;
-        AVLNode T2 = y.left;
-        y.left = x;
-        x.right = T2;
+        AVLNode y = x.getRight();
+        AVLNode T2 = y.getLeft();
+
+        y.setLeft(x);
+        x.setRight(T2);
+
         updateHeight(x);
         updateHeight(y);
+
         return y;
     }
 
-
     private void rangeSearch(AVLNode node, double min, double max, List<Product> result) {
         if (node == null) return;
-        if (min < node.key) {
+
+        if (min < node.getKey()) {
             System.out.println("Range search left");
-            rangeSearch(node.left, min, max, result);
+            rangeSearch(node.getLeft(), min, max, result);
         }
-        if (min <= node.key && node.key <= max) {
+
+        if (min <= node.getKey() && node.getKey() <= max) {
             System.out.println("add all");
-            result.addAll(node.produits);
+            result.addAll(node.getProducts());
         }
-        if (node.key < max) {
+
+        if (node.getKey() < max) {
             System.out.println("Range search right");
-            rangeSearch(node.right, min, max, result);
+            rangeSearch(node.getRight(), min, max, result);
         }
     }
 
@@ -120,6 +116,5 @@ class AVLTree {
         rangeSearch(root, min, max, result);
         return result;
     }
-
-
 }
+

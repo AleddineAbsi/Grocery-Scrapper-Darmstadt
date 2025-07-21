@@ -1,4 +1,4 @@
-package com.aleddineabsi.scrapper;
+package com.aleddineabsi.scrapper.model;
 
 public class Product {
     private int id = 0;

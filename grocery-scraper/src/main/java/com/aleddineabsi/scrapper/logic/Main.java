@@ -1,5 +1,8 @@
-package com.aleddineabsi.scrapper;
+package com.aleddineabsi.scrapper.logic;
 
+
+import com.aleddineabsi.scrapper.model.Product;
+import com.aleddineabsi.scrapper.model.ProductData;
 
 import java.io.IOException;
 import java.util.List;
@@ -8,9 +11,9 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hellääo world!");
 
-        /*
+
         ShopScrapper myScrapper = new ShopScrapper();
-        String browserRoot = "C:\\Users\\laledd\\Desktop\\Chromium\\chrome.exe";
+        String browserRoot = "C:\\Users\\aledd\\Desktop\\Chromium\\chrome.exe";
 
         DatabaseManager.manage();
 
@@ -70,12 +73,13 @@ public class Main {
         t2.start();
         t3.start();
 
-        */
 
+
+        /*
         ProductData myData = new ProductData();
         myData.updateProductListing();
         myData.supressDoubles();
-        List<Product> myProduct = myData.getProductListing();
+        List<Product> myProduct = myData.byPriceFaster(myData.getProductListing(),2.5,5);
         for(Product p : myProduct){
             System.out.println(p.getName() + " " + p.getPrice());
         }
@@ -86,5 +90,7 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+
+         */
     }
 }

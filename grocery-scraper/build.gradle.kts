@@ -1,4 +1,6 @@
 plugins {
+    id("application")
+    id("org.openjfx.javafxplugin") version "0.0.13"
     id("java")
 }
 
@@ -18,7 +20,15 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.45.1.0")
 }
 
+application {
+    mainClass.set("com.aleddineabsi.scrapper.gui.MainGUI")
+}
+
+javafx {
+    version = "21"
+    modules = listOf("javafx.controls", "javafx.fxml")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
-

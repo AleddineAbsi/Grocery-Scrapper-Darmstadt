@@ -1,17 +1,15 @@
-package com.aleddineabsi.scrapper;
+package com.aleddineabsi.scrapper.logic;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Scrapping of products and its details from each website using JavaScript
@@ -170,7 +168,7 @@ public class ShopScrapper {
             }
             try {
                 if(name != "null")
-                    DatabaseManager.insertProduct(DriverManager.getConnection("jdbc:sqlite:data/groceriesDatabase.db"), name, storeName,localCategory, price);
+                    DatabaseManager.insertProduct(DriverManager.getConnection(DatabaseManager.DB_URL), name, storeName,localCategory, price);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

@@ -1,4 +1,7 @@
-package com.aleddineabsi.scrapper;
+package com.aleddineabsi.scrapper.model;
+
+import com.aleddineabsi.scrapper.logic.AVLTree;
+import com.aleddineabsi.scrapper.logic.DatabaseManager;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
