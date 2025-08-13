@@ -22,14 +22,13 @@ import java.util.List;
  */
 
 public class ShopScrapper {
+    public static String browserRoot = "";
     /**
      * Set up the Driver with given Parameter
      *
-     * @param browserRoot root of the Browser app
      */
     void scrap(
             String storeName,
-            String browserRoot,
             String websiteUrl,
             String informationsClasses,
             String productNameClass,
@@ -49,13 +48,14 @@ public class ShopScrapper {
     }
 
     /**
-     * Setup the Dreiver with given Parameter
+     * Set up the Driver with given Parameter
+     * Only supporting Chrome atm
      *
      * @param runHeadless enable/disable headless for testing
      * @param browserRoot root of the Browser app
      */
     private WebDriver setupDriver(boolean runHeadless,String browserRoot){
-        WebDriverManager.chromedriver().setup();
+        System.out.println("Download of the appropriate driver, this may take between 1 and 3 minutes");
         ChromeOptions options = new ChromeOptions();
         if(runHeadless) {
             options.addArguments("--headless=new");
@@ -173,5 +173,14 @@ public class ShopScrapper {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * set manually the browser wanted for scrapping
+     *
+     * @param input path the to the browser
+     */
+    public static void setBrowserRoot(String input){
+        browserRoot = input;
     }
 }

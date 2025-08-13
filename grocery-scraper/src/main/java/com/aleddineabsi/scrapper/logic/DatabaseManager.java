@@ -115,10 +115,10 @@ public class DatabaseManager {
 
     public static void resetProductsTable(Connection conn) {
         try (Statement stmt = conn.createStatement()) {
-            // Supprimer toutes les lignes
+            // delete all lines
             stmt.executeUpdate("DELETE FROM products");
 
-            // Réinitialiser l'autoincrement de l'id
+            // reset the id counter
             stmt.executeUpdate("DELETE FROM sqlite_sequence WHERE name='products'");
 
             System.out.println("Database emptied and id resetted");
@@ -130,7 +130,7 @@ public class DatabaseManager {
 
     //Python section +
 
-    public static void exporterProduitsCSV(List<Product> produits, String cheminFichier) throws IOException {
+    public static void exportProducttoDatabase(List<Product> produits, String cheminFichier) throws IOException {
         try (PrintWriter writer = new PrintWriter(new File(cheminFichier))) {
             writer.println("id;name;price;price2;category;date;store");
 
