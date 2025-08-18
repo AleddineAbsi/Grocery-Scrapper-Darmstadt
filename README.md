@@ -19,10 +19,10 @@ The goal is to help students and individuals find the best available deals.
 - **Gradle** (build system)  
 
 ## Usage
-1)Start the app (MainGUI)
-2)Click **Choose File** and select the executable of a Web Browser on your system ( Only Works with Chrominium atm ) 
-3)Click Start Scrapping to launch scraping
-4)Results are stored in data/groceriesDatabase.db
+1. Start the app (MainGUI)
+2. Click **Choose File** and select the executable of a Web Browser on your system ( Only Works with Chrominium atm ) 
+3. Click Start Scrapping to launch scraping
+4. Results are stored in data/groceriesDatabase.db
 
 
 ## Project Structure
