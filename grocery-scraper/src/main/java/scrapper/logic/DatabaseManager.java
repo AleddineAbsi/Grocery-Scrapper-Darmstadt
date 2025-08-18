@@ -1,5 +1,5 @@
-package com.aleddineabsi.scrapper.logic;
-import com.aleddineabsi.scrapper.model.Product;
+package scrapper.logic;
+import scrapper.model.Product;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +52,8 @@ public class DatabaseManager {
     static void insertProduct(Connection conn, String name, String store, String category,double price) throws SQLException {
         String sql = "INSERT INTO products(name, store, price, category,updated_at) VALUES (?, ?, ?, ?,datetime('now'))";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name);
-            pstmt.setString(2, store);
+            pstmt.setString(1, name.toUpperCase());
+            pstmt.setString(2, store.toUpperCase());
             pstmt.setDouble(3, price);
             pstmt.setString(4, category);
             pstmt.executeUpdate();
@@ -107,7 +107,7 @@ public class DatabaseManager {
     static void deleteProductByName(Connection conn, String name) throws SQLException {
         String sql = "DELETE FROM products WHERE name = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name);
+            pstmt.setString(1, name.toUpperCase());
             int rows = pstmt.executeUpdate();
             System.out.println("Deleted Product: " + rows + " levels");
         }

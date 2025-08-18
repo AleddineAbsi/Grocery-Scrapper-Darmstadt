@@ -1,4 +1,4 @@
-package com.aleddineabsi.scrapper.model;
+package scrapper.model;
 
 import java.util.ArrayList;
 import java.util.List;

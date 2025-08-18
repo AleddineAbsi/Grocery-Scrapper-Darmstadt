@@ -1,6 +1,5 @@
-package com.aleddineabsi.scrapper.logic;
+package scrapper.logic;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -182,5 +181,9 @@ public class ShopScrapper {
      */
     public static void setBrowserRoot(String input){
         browserRoot = input;
+    }
+
+    public int addInt(int a,int b){
+        return a + b;
     }
 }

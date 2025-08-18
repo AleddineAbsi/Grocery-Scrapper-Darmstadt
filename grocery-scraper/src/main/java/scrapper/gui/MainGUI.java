@@ -1,7 +1,7 @@
-package com.aleddineabsi.scrapper.gui;
+package scrapper.gui;
 
-import com.aleddineabsi.scrapper.logic.Main;
-import com.aleddineabsi.scrapper.logic.ShopScrapper;
+import scrapper.logic.Main;
+import scrapper.logic.ShopScrapper;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

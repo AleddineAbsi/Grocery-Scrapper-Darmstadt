@@ -1,11 +1,9 @@
-package com.aleddineabsi.scrapper.logic;
+package scrapper.logic;
 
 
-import com.aleddineabsi.scrapper.model.Product;
-import com.aleddineabsi.scrapper.model.ProductData;
-import org.sqlite.core.DB;
+import scrapper.model.Product;
+import scrapper.model.ProductData;
 
-import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;

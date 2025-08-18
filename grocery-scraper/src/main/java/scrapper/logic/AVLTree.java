@@ -1,7 +1,7 @@
-package com.aleddineabsi.scrapper.logic;
+package scrapper.logic;
 
-import com.aleddineabsi.scrapper.model.AVLNode;
-import com.aleddineabsi.scrapper.model.Product;
+import scrapper.model.AVLNode;
+import scrapper.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
