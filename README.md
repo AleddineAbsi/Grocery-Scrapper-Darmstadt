@@ -11,24 +11,25 @@ The goal is to help students and individuals find the best available deals.
 - Product comparison and price sorting  
 
 ##  Tech Stack
-
 - **Java 21+**  
 - **JavaFX** (UI)  
 - **Selenium + WebDriverManager** (scraping)  
 - **SQLite JDBC** (database)  
 - **Gradle** (build system)  
 
+## Project Structure
+- **GUI (`gui/`)** → JavaFX interface with buttons to select Chromium/Chrome executable and start scraping.  
+- **Logic (`logic/`)** → Scraping orchestration and database management.  
+- **Model (`model/`)** → Data models like `Product`.
+- **Tests (`test/`)** → JUnit tests for logic and model classes
+
 ## Usage
 1. Start the app (MainGUI)
-2. Click **Choose File** and select the executable of a Web Browser on your system ( Only Works with Chrominium atm ) 
+2. Click **Choose File** and select the executable of a Web Browser on your system (Only Works with Chrominium atm) 
 3. Click Start Scrapping to launch scraping
 4. Results are stored in data/groceriesDatabase.db
 
 
-## Project Structure
 
-- **GUI (`gui/`)** → JavaFX interface with buttons to select Chromium/Chrome executable and start scraping.  
-- **Logic (`logic/`)** → Scraping orchestration and database management.  
-- **Model (`model/`)** → Data models like `Product`.  
 
 
