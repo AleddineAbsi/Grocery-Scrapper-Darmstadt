@@ -1,4 +1,4 @@
-# Grocery-Scrapper-Darmstadt
+# Grocery-Scraper-Darmstadt
 A Java application that compares grocery prices across different supermarkets in Darmstadt.  
 It scrapes product data, stores it in a SQLite database, and provides a simple JavaFX UI to launch the process.  
 The goal is to help students and individuals find the best available deals.
